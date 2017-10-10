@@ -17,23 +17,93 @@ class IndexController extends Controller {
         // get user_info
         $userinfoUrl = 'https://api.weixin.qq.com/sns/userinfo?access_token='.$access_token.'&openid='.$openid.'&lang=zh_CN';
         $userinfoArray = json_decode($this->curlGet($userinfoUrl),true);
-        // save in db
-        $user = D('Scanuser')->addScanuser($userinfoArray);
-
+        // 查询是否存在用户信息，有则更新，没则添加
+        $openid = $userinfoArray['openid'];
+        $user = D('Scanuser')->findScanuser($openid);
+        if($user) {
+            $updateUser = D('Scanuser')->updateUser($user['user_id'],$userinfoArray);
+        }else {
+            $user = D('Scanuser')->addScanuser($userinfoArray);
+        }
         //连接JS_SDK
+        $userinfoDBArray = D('Scanuser')->findScanuser($openid);
         $signPackage = D('Wxsign')->getSignPackage(C('appId'),C('appSecret'));
         $this->assign(array(
             'signPackage' => $signPackage,
-            'userInfo' => $userinfoArray,
+            'userInfo' => $userinfoDBArray,
         ));
         $this->display();
     }
 
     public function enrol() {
-        $enrol_id = $_GET['enrol'];
-        print_r($enrol_id);
+        $enrol_id = $_GET['enrol_id'];
+        $enrol = D('Enrol')->getEnrolByEnrolID($enrol_id);
+
+		if(!$enrol) {
+			$this->assign(array(
+			    'status' => 0,
+                'message' => '信息有误',
+                'more_message' => '信息查找失败'
+            ));
+		}else {
+		    if($enrol['sign_time'] != 0) {
+                $this->assign(array(
+                    'status' => 0,
+                    'message' => '不可重复签到！',
+                    'more_message' => '该选手已签到',
+                ));
+            }else {
+                $tasks = D('Tasks')->getOneTasksByID($enrol['tasks_id']);
+                $enrol_value = D('Enrolvalue')->selectEnrolByEnrolID($enrol_id);
+                $project = D('Project')->getOneProjectByID($enrol['project_id']);
+                $this->assign(array(
+                    'status' => 1,
+                    'enrol' => $enrol,
+                    'tasks' => $tasks,
+                    'enrol_value' => $enrol_value,
+                    'project' => $project,
+                ));
+            }
+
+        }
+
         $this->display();
     }
+
+    public function signIN() {
+        $enrol_id = $_GET['enrol_id'];
+        if(!$enrol_id) {
+            $this->assign(array(
+                'status' => 0,
+                'message' => '报名ID不存在！'
+            ));
+        }else {
+            $enrol = D('enrol')->getEnrolByEnrolID($enrol_id);
+            if($enrol['sign_time'] != 0) {
+                $this->assign(array(
+                    'status' => 2,
+                    'message' => '不可重复签到！',
+                    'enrol' => $enrol,
+                ));
+            }else {
+                $enrolSignIN = D('Enrol')->setEnrolSignTime($enrol_id);
+                if($enrolSignIN) {
+                    $this->assign(array(
+                        'status' => 1,
+                        'message' => '签到成功！'
+                    ));
+                }else {
+                    $this->assign(array(
+                        'status' => 0,
+                        'message' => '签到失败！'
+                    ));
+                }
+            }
+
+        }
+        $this->display();
+    }
+
     public function curlGet($url) {
         //初始化
         $ch = curl_init();

@@ -29,4 +29,8 @@ class IndexController extends Controller {
             return false;
         }
     }
+
+    public test() {
+        
+    }
 }

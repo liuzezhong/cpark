@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link href="https://cdn.bootcss.com/weui/1.1.2/style/weui.css" rel="stylesheet">
+    <link href="Public/Wxapp/example.css" rel="stylesheet">
+    <link href="Public/Wxapp/common.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <if condition="$status eq 1">
+    	<title>签到成功</title>
+    	<else />
+    	<title>签到失败</title>
+    </if>
+</head>
+<body>
+	<if condition="$status eq 1"> 
+		<div class="">
+    	<div class="weui-msg">
+	        <div class="weui-msg__icon-area"><i class="weui-icon-success weui-icon_msg"></i></div>
+	        <div class="weui-msg__text-area">
+	            <h2 class="weui-msg__title">签到成功</h2>
+	            <p class="weui-msg__desc"><span id="time">5</span>秒后自动跳转至首页</p>
+	        </div>
+	        <div class="weui-msg__opr-area">
+	            <p class="weui-btn-area">
+	                <a href="javascript:history.go(-2);" class="weui-btn weui-btn_primary">立即返回</a>
+	            </p>
+	        </div>
+	        <div class="weui-msg__extra-area">
+	            <div class="weui-footer weui-footer_fixed-bottom">
+	            <p class="weui-footer__links">
+	                <a href="javascript:home();" class="weui-footer__link">无锡中铠云文化创意有限公司</a>
+	            </p>
+	            <p class="weui-footer__text">Copyright &copy; 2014-2017 zhongkaiyun.com</p>
+	        </div>
+        </div>
+    </div>
+			<else />
+		<div class="page">
+		    <div class="weui-msg">
+		        <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+		        <div class="weui-msg__text-area">
+		            <h2 class="weui-msg__title">签到失败</h2>
+		            <p class="weui-msg__desc">签到失败，<span id="time">5</span>秒后跳转至首页</p>
+		        </div>
+		        <div class="weui-msg__opr-area">
+		            <p class="weui-btn-area">
+		                <a href="javascript:history.go(-2);" class="weui-btn weui-btn_primary">返回首页</a>
+		            </p>
+		        </div>
+		        <div class="weui-msg__extra-area">
+		            <div class="weui-footer weui-footer_fixed-bottom">
+		            <p class="weui-footer__links">
+		                <a href="javascript:home();" class="weui-footer__link">无锡中铠云文化创意有限公司</a>
+		            </p>
+		            <p class="weui-footer__text">Copyright &copy; 2014-2017 zhongkaiyun.com</p>
+		        </div>
+		    </div>
+		</div>
+		<else>
+			<div class="page">
+				<div class="weui-msg">
+					<div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+					<div class="weui-msg__text-area">
+						<h2 class="weui-msg__title">{$message}</h2>
+						<p class="weui-msg__desc">该选手已签到<span id="time">5</span>秒后跳转至首页</p>
+					</div>
+					<div class="weui-msg__opr-area">
+						<p class="weui-btn-area">
+							<a href="javascript:history.go(-2);" class="weui-btn weui-btn_primary">返回首页</a>
+						</p>
+					</div>
+					<div class="weui-msg__extra-area">
+						<div class="weui-footer weui-footer_fixed-bottom">
+							<p class="weui-footer__links">
+								<a href="javascript:home();" class="weui-footer__link">无锡中铠云文化创意有限公司</a>
+							</p>
+							<p class="weui-footer__text">Copyright &copy; 2014-2017 zhongkaiyun.com</p>
+						</div>
+					</div>
+				</div>
+	</if>
+    
+</div>
+
+<script type="text/javascript">
+	$(function () {
+ 
+      setTimeout(ChangeTime, 1000);
+ 
+    });
+ 
+    function ChangeTime() {
+ 
+      var time;
+ 
+      time = $("#time").text();    
+ 
+      time = parseInt(time);
+ 
+      time--;
+ 
+      if (time <= 0) {
+ 
+        javascript:history.go(-2);
+ 
+      } else {
+ 
+        $("#time").text(time);
+ 
+        setTimeout(ChangeTime, 1000);
+ 
+      }
+ 
+    }
+
+</script>
+</body>
+</html>

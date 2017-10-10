@@ -2,10 +2,131 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>现场扫码</title>
-    <p>hahhhhaahh</p>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+     <link href="https://cdn.bootcss.com/weui/1.1.2/style/weui.css" rel="stylesheet">
+    <link href="Public/Wxapp/example.css" rel="stylesheet">
+    <link href="Public/Wxapp/common.css" rel="stylesheet">
+    <title>签到信息</title>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
+    <if condition="$status eq 1">
+        <div class="page__bd detail line-top">
+        <div class="weui-cells__title">赛事详情</div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>赛事名称</p>
+                </div>
+                <div class="weui-cell__ft">{$tasks.title}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>参赛项目</p>
+                </div>
+                <div class="weui-cell__ft">{$project.title}</div>
+            </div>
+        </div>
 
+        <div class="weui-cells__title">报名事项</div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>报名费用</p>
+                </div>
+                <div class="weui-cell__ft">{$project.price}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>支付状态</p>
+                </div>
+                <div class="weui-cell__ft"><if condition="$enrol.pay_status eq 1">已支付<else /><span style="color:red;">未支付</span></if></div>
+            </div>
+        </div>
+
+        <div class="weui-cells__title">报名详情</div>
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>姓名</p>
+                </div>
+                <div class="weui-cell__ft">{$enrol_value[0].value}</div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">
+                    <p>手机号</p>
+                </div>
+                <div class="weui-cell__ft">{$enrol_value[1].value}</div>
+            </div>
+        </div>
+
+        <div class="page__bd page__bd_spacing qiandoliji">
+            <a href="javascript:;" class="weui-btn weui-btn_primary" id="signin" enrol-id="{$enrol.enrol_id}">立即签到</a>
+        </div>
+        
+        <elseif condition="$status eq 0" />
+            <div class="page">
+                <div class="weui-msg">
+                    <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+                    <div class="weui-msg__text-area">
+                        <h2 class="weui-msg__title">{$message}</h2>
+                        <p class="weui-msg__desc">{$more_message}，<span id="time">5</span>秒后跳转至首页</p>
+                    </div>
+                    <div class="weui-msg__opr-area">
+                        <p class="weui-btn-area">
+                            <a href="javascript:history.go(-1);" class="weui-btn weui-btn_primary">返回首页</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $(function () {
+             
+                  setTimeout(ChangeTime, 1000);
+             
+                });
+             
+                function ChangeTime() {
+             
+                  var time;
+             
+                  time = $("#time").text();    
+             
+                  time = parseInt(time);
+             
+                  time--;
+             
+                  if (time <= 0) {
+             
+                    javascript:history.go(-1);
+             
+                  } else {
+             
+                    $("#time").text(time);
+             
+                    setTimeout(ChangeTime, 1000);
+             
+                  }
+             
+                }
+
+</script>
+    </if>
+    <div class="weui-footer weui-footer_fixed-bottom">
+            <p class="weui-footer__links">
+                <a href="javascript:home();" class="weui-footer__link">无锡中铠云文化创意有限公司</a>
+            </p>
+            <p class="weui-footer__text">Copyright &copy; 2014-2017 zhongkaiyun.com</p>
+        </div>
+       <br>
+    
+<script>
+
+    $('#signin').click(function () {
+        var enrol_id = $(this).attr('enrol-id');
+        var url = 'http://cpark.zhongkaiyun.com/index.php?m=Wxapp&c=index&a=signIN&enrol_id=' + enrol_id;
+        window.location.href = url ;
+    });
+</script>
 </body>
 </html>

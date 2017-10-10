@@ -2,15 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link href="https://cdn.bootcss.com/weui/1.1.2/style/weui.css" rel="stylesheet">
+    <link href="Public/Wxapp/example.css" rel="stylesheet">
+    <link href="Public/Wxapp/common.css" rel="stylesheet">
     <script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
     <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <title>中铠街区赛事平台</title>
+    <title>中铠赛事签到平台</title>
 </head>
 <body>
-    <p><img src="{$userInfo.headimgurl}"></p>
-    <p>你好，{$userInfo.nickname}</p>
-    <button id="qiandao">现场签到</button>
-    <p id="liu"></p>
+    <if condition="$userInfo.status eq 1">
+            <div class="container">
+                <div class="header-div">
+                    <img class="header-img" src="{$userInfo.headimgurl}" />
+                </div>
+                <div class="nickname-div">
+                    <p class="nickname-p">你好，{$userInfo.nickname}</p>
+                </div>
+                    
+                <div class="page__bd page__bd_spacing signin">
+                    <a href="javascript:;" class="weui-btn weui-btn_primary" id="qiandao">赛事签到</a>
+                </div>
+
+            </div>
+        <else />
+        <div class="page">
+                <div class="weui-msg">
+                    <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+                    <div class="weui-msg__text-area">
+                        <h2 class="weui-msg__title">没有权限</h2>
+                        <p class="weui-msg__desc">你没有扫码签到的权限，请联系管理员获取</p>
+                    </div>
+                </div>
+            </div>
+    </if>
+    
+    
+        <div class="weui-footer weui-footer_fixed-bottom">
+            <p class="weui-footer__links">
+                <a href="javascript:home();" class="weui-footer__link">无锡中铠云文化创意有限公司</a>
+            </p>
+            <p class="weui-footer__text">Copyright &copy; 2014-2017 zhongkaiyun.com</p>
+        </div>
+    
     <script>
         wx.config({
             debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
@@ -41,8 +75,7 @@
                 success: function (res) {
                     var result = res.resultStr; // 当needResult 为 1 时，扫码返回的结果
                     var url = 'http://cpark.zhongkaiyun.com/index.php?m=Wxapp&c=index&a=enrol&enrol_id=' + result;
-                    $('#liu').html(url);
-                    window.location.href = url;
+                    window.location.href = url ;
                 }
             });
 
